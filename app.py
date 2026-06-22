@@ -1,20 +1,17 @@
 import streamlit as st
 import pickle
 import re
-from nltk.corpus import stopwords
-import nltk
+from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
-nltk.download('stopwords')
-
-# Load Model and Vectorizer
+# Load Model
 with open("sentiment_model.pkl", "rb") as file:
     model = pickle.load(file)
 
+# Load TF-IDF Vectorizer
 with open("tfidf_vectorizer.pkl", "rb") as file:
     tfidf = pickle.load(file)
 
-# Stopwords
-stop_words = set(stopwords.words('english'))
+stop_words = ENGLISH_STOP_WORDS
 
 # Text Cleaning Function
 def clean_text(text):
@@ -38,23 +35,21 @@ st.set_page_config(
     layout="centered"
 )
 
-# Title
 st.title("💬 Social Media Sentiment Analysis")
 st.markdown("### NLP Project using TF-IDF and Logistic Regression")
 
 st.markdown("---")
 
-# Input
 user_text = st.text_area(
     "Enter a comment or review:",
     height=150
 )
 
-# Predict Button
 if st.button("Analyze Sentiment"):
 
     if user_text.strip() == "":
         st.warning("Please enter some text.")
+
     else:
 
         cleaned_text = clean_text(user_text)
@@ -69,22 +64,20 @@ if st.button("Analyze Sentiment"):
             2: "Positive 😊"
         }
 
-        result = sentiment_labels[prediction]
-
-        st.success(f"Predicted Sentiment: {result}")
+        st.success(
+            f"Predicted Sentiment: {sentiment_labels[prediction]}"
+        )
 
 st.markdown("---")
 
-st.markdown(
-    """
-    **Dataset:** Sentiment Analysis Dataset (241K+ Records)
+st.markdown("""
+**Dataset:** Sentiment Analysis Dataset (241K+ Records)
 
-    **Algorithm:** Logistic Regression
+**Algorithm:** Logistic Regression
 
-    **Feature Extraction:** TF-IDF Vectorization
+**Feature Extraction:** TF-IDF
 
-    **Accuracy:** 79.5%
+**Accuracy:** 79.5%
 
-    **Developed By:** Bhupinder Sandhu
-    """
-)
+**Developed By:** Bhupinder Sandhu
+""")
